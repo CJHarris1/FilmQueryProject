@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.skilldistillery.filmquery.entities.Actor;
@@ -52,6 +53,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				film.setReplacementCost(rs.getDouble("replacement_cost"));
 				film.setRating(rs.getString("rating"));
 				film.setSpecialFeatures(rs.getString("special_features"));
+				film.setActors(findActorsByFilmId(filmId));
 
 				rs.close();
 				stmt.close();
@@ -81,11 +83,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			stmt.setInt(1, actorId);
 			rs = stmt.executeQuery();
 
-			while (rs.next()) {
+			if (rs.next()) {
 				actor = new Actor(); 
 			    actor.setId(rs.getInt("id"));
 			    actor.setFirstName(rs.getString("first_name"));
 			    actor.setLastName(rs.getString("last_name"));
+			    
 			}
 			
 			rs.close();
@@ -103,14 +106,15 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	public List<Actor> findActorsByFilmId(int filmId) {
 		String user = "student";
 		String pass = "student";
-		List<Actor> actors;
+		List<Actor> actors = new ArrayList<>();
+		Actor actor;
 		Connection conn;
 		String sqltxt;
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
 			conn = DriverManager.getConnection(URL, user, pass);
-			sqltxt = "SELECT actor.first_name, actor.last_name \n"
+			sqltxt = "SELECT actor.id, actor.first_name, actor.last_name \n"
 					+ "FROM film_actor JOIN actor ON actor.id = film_actor.actor_id\n"
 					+ "                JOIN film ON film_actor.film_id = film.id\n"
 					+ "                WHERE film_actor.film_id = ?;";
@@ -119,16 +123,21 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			stmt.setInt(1, filmId);
 			rs = stmt.executeQuery();
 
-			while (rs.next()) {
-				
+			if (rs.next()) {
+				actor = new Actor(); 
+			    actor.setId(rs.getInt("id"));
+			    actor.setFirstName(rs.getString("first_name"));
+			    actor.setLastName(rs.getString("last_name"));
+			    actors.add(actor);
 			}
+			
 			rs.close();
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return actors;
 	}
 
 }
