@@ -138,13 +138,15 @@ public class Film {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Film [id=").append(id).append(", title=").append(title).append(", description=")
-				.append(description).append(", releaseYear=").append(releaseYear).append(", language_id=")
+		builder.append("Film id: ").append(id).append(" title: ").append(title).append(", ")
+				.append(description).append(", released in: ").append(releaseYear).append(", language_id=")
 				.append(languageId).append(", rentalDuration=").append(rentalDuration).append(", rentalRate=")
 				.append(rentalRate).append(", length=").append(length).append(", replacementCost=")
 				.append(replacementCost).append(", rating=").append(rating).append(", specialFeatures=")
 				.append(specialFeatures).append(", actors=").append(actors).append("]");
 		return builder.toString();
+		
+		
 	}
 	
 	public Film(int id, String title, String description, String releaseYear, int language_id, int rentalDuration,
