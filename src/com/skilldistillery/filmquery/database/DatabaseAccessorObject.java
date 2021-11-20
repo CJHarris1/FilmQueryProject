@@ -11,7 +11,6 @@ import java.util.List;
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
 
-//this will be only class that talks to sql
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false";
@@ -26,7 +25,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public Film findFilmById(int filmId) {
+	public Film findFilmById(String filmId) {
 		String user = "student";
 		String pass = "student";
 		Film film = null;
@@ -39,20 +38,18 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			sqltxt = "SELECT film.id, film.title, film.description, film.release_year, film.rating, language.name FROM "
 					+ "film JOIN language ON language.id = film.language_id WHERE film.id = ?;";
 			stmt = conn.prepareStatement(sqltxt);
-			stmt.setInt(1, filmId);
+			stmt.setString(1, filmId);
 			rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				film = new Film();
-				film.setId(rs.getInt("film.id"));
+				film.setId(rs.getString("film.id"));
 				film.setTitle(rs.getString("film.title"));
 				film.setDescription(rs.getString("film.description"));
 				film.setReleaseYear(rs.getString("film.release_year"));
 				film.setLanguageName(rs.getString("language.name"));
 				film.setRating(rs.getString("film.rating"));
 				film.setActors(findActorsByFilmId(filmId));
-
-				
 			}
 			rs.close();
 			stmt.close();
@@ -66,7 +63,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public Actor findActorById(int actorId) {
+	public Actor findActorById(String actorId) {
 		String user = "student";
 		String pass = "student";
 		Actor actor = null;
@@ -78,7 +75,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			conn = DriverManager.getConnection(URL, user, pass);
 			sqltxt = "SELECT id, first_name, last_name FROM actor WHERE id = ?";
 			stmt = conn.prepareStatement(sqltxt);
-			stmt.setInt(1, actorId);
+			stmt.setString(1, actorId);
 			rs = stmt.executeQuery();
 
 			if (rs.next()) {
@@ -86,9 +83,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			    actor.setId(rs.getInt("id"));
 			    actor.setFirstName(rs.getString("first_name"));
 			    actor.setLastName(rs.getString("last_name"));
-			    
 			}
-			
 			rs.close();
 			stmt.close();
 			conn.close();
@@ -101,7 +96,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public List<Actor> findActorsByFilmId(int filmId) {
+	public List<Actor> findActorsByFilmId(String filmId) {
 		String user = "student";
 		String pass = "student";
 		List<Actor> actors = new ArrayList<>();
@@ -118,7 +113,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					+ "                WHERE film_actor.film_id = ?;";
 			stmt = conn.prepareStatement(sqltxt);
 
-			stmt.setInt(1, filmId);
+			stmt.setString(1, filmId);
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -159,13 +154,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 			while (rs.next()) {
 				film = new Film();
-				film.setId(rs.getInt("id"));
+				film.setId(rs.getString("id"));
 				film.setTitle(rs.getString("title"));
 				film.setDescription(rs.getString("description"));
 				film.setReleaseYear(rs.getString("film.release_year"));
 				film.setLanguageName(rs.getString("language.name"));
 				film.setRating(rs.getString("rating"));
-				int id = film.getId();
+				String id = film.getId();
 				film.setActors(findActorsByFilmId(id));
 				films.add(film);
 

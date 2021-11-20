@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Film {
-	private int id;
+	private String id;
 	private String title;
 	private String description;
 	private String releaseYear;
@@ -16,9 +16,8 @@ public class Film {
 
 	}
 
-	public Film(int id, String title, String description, String releaseYear, String languageName, String rating,
+	public Film(String id, String title, String description, String releaseYear, String languageName, String rating,
 			List<Actor> actors) {
-		super();
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -28,11 +27,11 @@ public class Film {
 		this.actors = actors;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

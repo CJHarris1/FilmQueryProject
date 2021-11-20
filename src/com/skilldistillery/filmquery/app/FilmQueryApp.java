@@ -19,8 +19,8 @@ public class FilmQueryApp {
 	}
 
 	private void test() {
-		Film film = db.findFilmById(1);
-		Actor actor = db.findActorById(1);
+		Film film = db.findFilmById("1");
+		Actor actor = db.findActorById("1");
 		System.out.println(film);
 		System.out.println(actor);
 	}
@@ -34,54 +34,59 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) {
-		System.out.println("What would you like to do?");
-		System.out.println("1) Look up a film by its id");
-		System.out.println("2) Look up films by a search keyword");
-		System.out.println("3) Exit");
-
-		String userInput = input.nextLine();
-		System.out.println();
-
-		switch (userInput) {
-		case "1":
-			searchFilmById(input);
-			break;
-		case "2":
-			searchFilmByKeyword(input);
-			break;
-		case "3":
-			System.out.println("Enjoy your movie!");
-			break;
-		default:
-			System.out.println("Invalid input, please try again");
+		boolean pickAgain = true;
+		while(pickAgain) {
+			System.out.println("What would you like to do?");
+			System.out.println("1) Look up a film by its id");
+			System.out.println("2) Look up films by a search keyword");
+			System.out.println("3) Exit");
+	
+			String userInput = input.nextLine();
 			System.out.println();
-			break;
+	
+			switch (userInput) {
+			case "1":
+				searchFilmById(input);
+				pickAgain = false;
+				break;
+			case "2":
+				searchFilmByKeyword(input);
+				pickAgain = false;
+				break;
+			case "3":
+				System.out.println("Enjoy your movie!");
+				pickAgain = false;
+				break;
+			default:
+				System.out.println("Invalid input, please try again");
+				System.out.println();
+				break;
+			}
 		}
 	}
 
 	private void searchFilmById(Scanner input) {
-			System.out.println("Please enter the Id of the film you wish to view:");
-			int id = input.nextInt();
-			input.nextLine();
+		System.out.println("Please enter the Id of the film you wish to view:");
+		String id = input.nextLine();
+		System.out.println();
+		if (db.findFilmById(id) == null) {
+			System.out.println("Invalid movie id!");
 			System.out.println();
-			if (db.findFilmById(id) == null) {
-				System.out.println("Invalid movie id!");
-			} else {
-				System.out.println(db.findFilmById(id));
-				System.out.println();
-			}
-			searchByIdAgain(input);
+		} else {
+			System.out.println(db.findFilmById(id));
+		}
+		searchByIdAgain(input);
 	}
 
 	private void searchByIdAgain(Scanner input) {
 		boolean validInput = false;
-		while(!validInput) {
+		while (!validInput) {
 			System.out.println("Would you like to search for another movie with an id?");
-			System.out.println("1) Yes, let me search another movie using id");
+			System.out.println("1) Yes, let me search for another movie using id");
 			System.out.println("2) No, take me back to the main menu");
 			String userInput = input.nextLine();
 			System.out.println();
-		
+
 			switch (userInput) {
 			case "1":
 				searchFilmById(input);
@@ -93,6 +98,7 @@ public class FilmQueryApp {
 				break;
 			default:
 				System.out.println("Invalid input, please try again");
+				System.out.println();
 				break;
 			}
 		}
@@ -101,28 +107,32 @@ public class FilmQueryApp {
 	private void searchFilmByKeyword(Scanner input) {
 		System.out.println("Please enter the keyword of the film you wish to view:");
 		String keyword = input.nextLine();
-		
+
 		System.out.println();
-		if (db.findFilmByKeyword(keyword)==null) {
-			System.out.println("Invalid movie id!");
-		} else {
-			for (Film movie : db.findFilmByKeyword(keyword)) {
-				System.out.println(movie);
-			}
+		
+		if (db.findFilmByKeyword(keyword).size() == 0) {
+			System.out.println("No movies were found with that keyword.");
 			System.out.println();
 		}
+		else {
+			for (Film movie : db.findFilmByKeyword(keyword)) {
+				
+				System.out.println(movie);
+			}
+		}
+		
 		searchByKeywordAgain(input);
 	}
-	
+
 	private void searchByKeywordAgain(Scanner input) {
 		boolean validInput = false;
-		while(!validInput) {
+		while (!validInput) {
 			System.out.println("Would you like to search for another movie using a keyword?");
-			System.out.println("1) Yes, let me search another movie using a keyword");
+			System.out.println("1) Yes, let me search for another movie using a keyword");
 			System.out.println("2) No, take me back to the main menu");
 			String userInput = input.nextLine();
 			System.out.println();
-		
+
 			switch (userInput) {
 			case "1":
 				searchFilmByKeyword(input);
@@ -134,9 +144,9 @@ public class FilmQueryApp {
 				break;
 			default:
 				System.out.println("Invalid input, please try again");
+				System.out.println();
 				break;
 			}
 		}
 	}
-
 }
