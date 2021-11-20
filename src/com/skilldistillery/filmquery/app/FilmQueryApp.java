@@ -99,14 +99,16 @@ public class FilmQueryApp {
 	}
 
 	private void searchFilmByKeyword(Scanner input) {
-		System.out.println("Please enter the keyword of the films you wish to view:");
+		System.out.println("Please enter the keyword of the film you wish to view:");
 		String keyword = input.nextLine();
 		
 		System.out.println();
-		if (db.findFilmByKeyword(keyword) == null) {
+		if (db.findFilmByKeyword(keyword)==null) {
 			System.out.println("Invalid movie id!");
 		} else {
-			System.out.println(db.findFilmByKeyword(keyword));
+			for (Film movie : db.findFilmByKeyword(keyword)) {
+				System.out.println(movie);
+			}
 			System.out.println();
 		}
 		searchByKeywordAgain(input);
